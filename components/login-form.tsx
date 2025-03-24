@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
@@ -18,11 +18,7 @@ export default function LoginForm() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { showNotification } = useNotification()
-
-  // Get the callback URL from the query parameters (if any)
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -42,8 +38,7 @@ export default function LoginForm() {
         // Show our custom notification
         showNotification("Login successful! Welcome to the admin dashboard.", "success")
 
-        // Redirect to the callback URL or dashboard
-        router.push(callbackUrl)
+        router.push("/dashboard")
       } else {
         setError(result.error || "Login failed")
         showNotification(result.error || "Login failed", "error")
@@ -110,6 +105,4 @@ export default function LoginForm() {
     </Card>
   )
 }
-
-
 
