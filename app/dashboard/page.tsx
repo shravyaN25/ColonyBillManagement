@@ -12,28 +12,25 @@ import { useRouter } from "next/navigation"
 import { Toaster } from "@/components/ui/toaster"
 import { toast } from "@/components/ui/use-toast"
 import { useNotification } from "@/components/notification-provider"
-import { logout } from "@/app/actions"
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("residents")
   const router = useRouter()
   const { showNotification } = useNotification()
 
-  const handleLogout = async () => {
-    // Call the server action to clear the auth cookie
-    await logout()
-
-    // Show notifications
+  const handleLogout = () => {
+    // In a real app, you would clear session/auth state here
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",
       variant: "default",
     })
 
+    // Show our custom notification
     showNotification("You have been successfully logged out.", "info")
 
-    // Redirect to login page
-    router.push("/")
+    // Force a hard redirect to ensure complete logout
+    window.location.href = "/"
   }
 
   return (
@@ -71,6 +68,4 @@ export default function Dashboard() {
     </div>
   )
 }
-
-
 
