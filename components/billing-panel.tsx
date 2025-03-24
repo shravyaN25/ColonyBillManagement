@@ -62,7 +62,7 @@ export function BillingPanel() {
 
     residents.forEach((resident) => {
       if (!residentAmounts[resident.id]) {
-        newAmounts[resident.id] = defaultAmount
+        newAmounts[resident.id] = defaultAmount || "0" // Ensure we never have an empty string
         updated = true
       }
     })
@@ -94,9 +94,11 @@ export function BillingPanel() {
   }
 
   const handleAmountChange = (id: string, amount: string) => {
+    // Ensure amount is never empty
+    const validAmount = amount === "" ? "0" : amount
     setResidentAmounts((prev) => ({
       ...prev,
-      [id]: amount,
+      [id]: validAmount,
     }))
   }
 
@@ -105,11 +107,28 @@ export function BillingPanel() {
   }
 
   const getResidentAmount = (id: string) => {
-    return residentAmounts[id] || defaultAmount
+    // Ensure we never return an empty string
+    return residentAmounts[id] || defaultAmount || "0"
   }
 
   const openPreview = (id: string) => {
     setPreviewResident(id)
+  }
+
+  const handleDefaultAmountChange = (value: string) => {
+    // Prevent empty value - set to 0 if user tries to clear it
+    const newAmount = value === "" ? "0" : value
+    const oldAmount = defaultAmount
+    setDefaultAmount(newAmount)
+
+    // Update amounts for residents that had the old default amount
+    const newAmounts = { ...residentAmounts }
+    residents.forEach((resident) => {
+      if (residentAmounts[resident.id] === oldAmount) {
+        newAmounts[resident.id] = newAmount
+      }
+    })
+    setResidentAmounts(newAmounts)
   }
 
   const handleSendBills = async () => {
@@ -132,12 +151,15 @@ export function BillingPanel() {
           const resident = getResidentById(residentId)
           if (!resident) return null
 
+          // Ensure amount is never empty
+          const amount = getResidentAmount(residentId)
+
           return {
             residentId: resident.id,
             residentName: resident.name,
             flatNumber: resident.flatNumber,
             email: resident.email,
-            amount: getResidentAmount(residentId),
+            amount: amount,
             status: "Paid",
             month: selectedMonth,
             year: selectedYear,
@@ -263,22 +285,16 @@ export function BillingPanel() {
             <Input
               id="defaultAmount"
               type="number"
+              min="0"
               value={defaultAmount}
-              onChange={(e) => {
-                const oldAmount = defaultAmount
-                const newAmount = e.target.value
-                setDefaultAmount(newAmount)
-
-                // Update amounts for residents that had the old default amount
-                const newAmounts = { ...residentAmounts }
-                residents.forEach((resident) => {
-                  if (residentAmounts[resident.id] === oldAmount) {
-                    newAmounts[resident.id] = newAmount
-                  }
-                })
-                setResidentAmounts(newAmounts)
-              }}
+              onChange={(e) => handleDefaultAmountChange(e.target.value)}
               placeholder="Enter default amount"
+              onBlur={() => {
+                // If somehow the field is empty on blur, set it to 0
+                if (defaultAmount === "") {
+                  handleDefaultAmountChange("0")
+                }
+              }}
             />
           </div>
         </div>
@@ -324,8 +340,15 @@ export function BillingPanel() {
                     <TableCell>
                       <Input
                         type="number"
-                        value={residentAmounts[resident.id] || defaultAmount}
+                        min="0"
+                        value={residentAmounts[resident.id] || defaultAmount || "0"}
                         onChange={(e) => handleAmountChange(resident.id, e.target.value)}
+                        onBlur={(e) => {
+                          // If somehow the field is empty on blur, set it to 0
+                          if (e.target.value === "") {
+                            handleAmountChange(resident.id, "0")
+                          }
+                        }}
                         className="w-24"
                       />
                     </TableCell>
@@ -393,4 +416,6 @@ export function BillingPanel() {
     </div>
   )
 }
+
+
 
