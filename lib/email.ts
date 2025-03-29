@@ -131,7 +131,7 @@ export async function sendBillEmail(resident: Resident, bill: SentBill) {
         </div>
         
         <div style="margin-top: 30px; font-size: 12px; color: #666; text-align: center; border-top: 1px solid #e0e0e0; padding-top: 15px;">
-          <p style="margin-bottom: 10px;">If you have any queries, contact the treasurer at 8310611260 or mail at annapurnabadavane@gmail.com</p>
+          <p style="margin-bottom: 10px;">If you have any queries, mail at annapurnabadavane@gmail.com</p>
       
         </div>
       </div>
