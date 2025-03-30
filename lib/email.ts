@@ -131,7 +131,8 @@ export async function sendBillEmail(resident: Resident, bill: SentBill) {
         </div>
         
         <div style="margin-top: 30px; font-size: 12px; color: #666; text-align: center; border-top: 1px solid #e0e0e0; padding-top: 15px;">
-          <p style="margin-bottom: 10px;">If you have any queries, mail at annapurnabadavane@gmail.com</p>
+ <p style="margin-bottom: 10px;">Note: The bill period mentioned is not applicable for payments above ₹400. Please ignore. Your actual bill period has been recorded in our ledger based on your payment. </p>
+      <p style="margin-bottom: 10px;">If you have any queries, mail at annapurnabadavane@gmail.com</p>
       
         </div>
       </div>
