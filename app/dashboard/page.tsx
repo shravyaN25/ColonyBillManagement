@@ -6,31 +6,36 @@ import { DashboardNav } from "@/components/dashboard-nav"
 import { ResidentsPanel } from "@/components/residents-panel"
 import { BillingPanel } from "@/components/billing-panel"
 import { SentBillsPanel } from "@/components/sent-bills-panel"
-import { LogOut } from "lucide-react"
+import { LogOut } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { Toaster } from "@/components/ui/toaster"
 import { toast } from "@/components/ui/use-toast"
 import { useNotification } from "@/components/notification-provider"
+import { logout } from "@/app/actions"
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState("residents")
   const router = useRouter()
   const { showNotification } = useNotification()
 
-  const handleLogout = () => {
-    // In a real app, you would clear session/auth state here
-    toast({
-      title: "Logged Out",
-      description: "You have been successfully logged out.",
-      variant: "default",
-    })
+  const handleLogout = async () => {
+    // Use the server action to logout
+    const result = await logout()
+    
+    if (result.success) {
+      toast({
+        title: "Logged Out",
+        description: "You have been successfully logged out.",
+        variant: "default",
+      })
 
-    // Show our custom notification
-    showNotification("You have been successfully logged out.", "info")
+      // Show our custom notification
+      showNotification("You have been successfully logged out.", "info")
 
-    // Force a hard redirect to ensure complete logout
-    window.location.href = "/"
+      // Navigate to login page
+      router.push("/")
+    }
   }
 
   return (
