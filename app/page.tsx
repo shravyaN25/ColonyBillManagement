@@ -1,6 +1,5 @@
-import { InstallPrompt } from "@/components/install-prompt"
+import LoginForm from "@/components/login-form"
 import { Logo } from "@/components/logo"
-import { LoginForm } from "@/components/login-form"
 
 export default function Home() {
   return (
@@ -20,12 +19,9 @@ export default function Home() {
         <div className="w-full max-w-md">
           <LoginForm />
         </div>
-      </main>
 
-      {/* Add the InstallPrompt component */}
-      <InstallPrompt />
+      </main>
     </div>
   )
 }
-
 
